@@ -17,12 +17,11 @@ namelist['last_name'] = namelist['name'].str.split().str[1]
 
 namelist.drop(columns=['name'], inplace=True)
 namelist.set_index(['first_name', 'last_name'], inplace=True)
-namelist.astype({'price': 'int32'}).dtypes
+namelist['price'] = pd.to_numeric(namelist['price'])
 
 # create a new field named above_100
-namelist["above_100"] = namelist["price"] > 100
+namelist['above_100'] = namelist['price'] > 100
 
 # save csv file
-today = date.today().strftime("%Y-%m-%d") 
-output_filename = "processed_dataset_" + today + ".csv"
+output_filename = "processed_" + filename
 namelist.to_csv(output_filename)
