@@ -8,7 +8,7 @@ order by C.cid;
 
 /* I want to find out the top 3 car manufacturers that customers bought by sales (quantity) 
 and the sales number for it in the current month. */
-select manufacturer, count(T.tid) as sales, 
+select manufacturer, count(T.tid) as sales
 from Cars, Transactions T
 where Cars.serial_number = T.serial_number
 and extract (month FROM sale_date) = extract (month FROM CURRENT_DATE)

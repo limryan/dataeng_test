@@ -83,3 +83,41 @@ insert into Transactions (sale_date, sale_time, cid, sid, serial_number) values
     ('2022-01-07','15:50',6,4,'JTEEP21A250130305');
 insert into Transactions (sale_date, sale_time, cid, sid, serial_number) values
     ('2022-01-10','12:30',1,1,'1C6RD6GT5CS336323');
+
+/* routine to insert details of new transaction */
+create or replace procedure new_transaction(
+    cust_name text,
+    cust_phone char(8),
+    salesperson text,
+    car_manufacturer text,
+    car_model text,
+    car_serial_number text,
+    car_weight numeric,
+    car_price money
+) language plpgsql as $$
+declare
+    new_transaction_id integer;
+    cust_id integer;
+    salesperson_id integer;
+
+begin
+    /* find customer id, if does not exist, create new customer entry */
+    select C.cid into cust_id from Customers C where cust_name = C.name and cust_phone = C.phone;
+    if (cust_id is null) then
+        cust_id := nextval(pg_get_serial_sequence('Customers', 'cid'));
+        insert into Customers values (cust_id, cust_name, cust_phone);
+    end if;
+
+    /* find salesperson id */
+    select S.sid into salesperson_id from Salespersons S where salesperson = S.name;
+
+    /* create new entry in Cars */
+    insert into Cars values 
+        (car_serial_number, car_manufacturer, car_model, car_weight, car_price);
+
+    /* create new transaction entry */
+    new_transaction_id := nextval(pg_get_serial_sequence('Transactions', 'tid'));
+    insert into Transactions values
+        (new_transaction_id, current_date, current_time, cust_id, salesperson_id, car_serial_number);
+end;
+$$;
