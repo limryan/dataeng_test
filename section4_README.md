@@ -14,5 +14,6 @@ Exported notebook as pdf.
 ## `section4.py`
 Copy of code found in the jupyter notebook to run the dashboard.
 
-## `section4.png`
+## `section4_screenshot.png`
 Screenshot of the dashboard in browser.
+![Dashboard](section4_screenshot.png)
