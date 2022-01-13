@@ -20,12 +20,13 @@ create table Cars (
 );
 
 create table Transactions (
-    tid             serial  primary key,
     sale_date       date    not null,
     sale_time       time    not null,
     cid             integer not null references Customers(cid),
     sid             integer not null references Salespersons(sid),
-    serial_number   text    not null references Cars(serial_number)
+    serial_number   text    not null references Cars(serial_number),
+    primary key (cid, sid, serial_number),
+    unique(serial_number)
 );
 
 /* Sample Data */
@@ -96,7 +97,6 @@ create or replace procedure new_transaction(
     car_price money
 ) language plpgsql as $$
 declare
-    new_transaction_id integer;
     cust_id integer;
     salesperson_id integer;
 
@@ -116,8 +116,7 @@ begin
         (car_serial_number, car_manufacturer, car_model, car_weight, car_price);
 
     /* create new transaction entry */
-    new_transaction_id := nextval(pg_get_serial_sequence('Transactions', 'tid'));
     insert into Transactions values
-        (new_transaction_id, current_date, current_time, cust_id, salesperson_id, car_serial_number);
+        (current_date, current_time, cust_id, salesperson_id, car_serial_number);
 end;
 $$;
