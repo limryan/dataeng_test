@@ -1,4 +1,4 @@
-from os import name
+import os
 import sys
 import pandas as pd
 from datetime import date
@@ -23,5 +23,5 @@ namelist['price'] = pd.to_numeric(namelist['price'])
 namelist['above_100'] = namelist['price'] > 100
 
 # save csv file
-output_filename = "processed_" + filename
+output_filename = os.path.dirname(filename) + "/processed_" + os.path.basename(filename)
 namelist.to_csv(output_filename)
